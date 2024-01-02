@@ -1,0 +1,19 @@
+<!-- to make sure there is a success msg due to flash message-->
+<% if (success && success.length) {%>
+
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <%= success %>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<% } %>
+
+<!-- to make sure there is a error msg due to flash message-->
+<% if (error && error.length) {%>
+
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  <%= error %>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<% } %>
