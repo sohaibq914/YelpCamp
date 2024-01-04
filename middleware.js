@@ -51,6 +51,10 @@ module.exports.isReviewAuthor = async (req, res, next) => {
 };
 
 module.exports.validateReview = (req, res, next) => {
+  if (req.body.review.rating == 0) {
+    req.flash("error", "Rating can not be 0!");
+    return res.redirect(`/campgrounds/${req.params.id}`);
+  }
   // req.body has rating and body
   const { error } = reviewSchema.validate(req.body); // checks the rating and body with joi review schema requirements
   console.log(error);
