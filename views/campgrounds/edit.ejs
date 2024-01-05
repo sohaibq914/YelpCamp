@@ -4,7 +4,7 @@
   <h1 class="text-center">Edit Campground</h1>
   <!-- middle of 6 col-->
   <div class="col-6 offset-3">
-    <form action="/campgrounds/<%=campground._id%>?_method=PUT" method="POST" novalidate class="validated-form">
+    <form action="/campgrounds/<%=campground._id%>?_method=PUT" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
       <div class="mb-3">
         <label class="form-label" for="title">Title</label>
         <!-- name attribute says this input is for the campground title key -->
@@ -18,11 +18,7 @@
         <input class="form-control" type="text" id="location" name="campground[location]" value="<%= campground.location %>" required />
         <div class="valid-feedback">Looks good!</div>
       </div>
-      <div class="mb-3">
-        <label class="form-label" for="image">Image URL</label>
-        <input class="form-control" type="text" id="image" name="campground[image]" value="<%= campground.image %>" required />
-        <div class="valid-feedback">Looks good!</div>
-      </div>
+
       <div class="mb-3">
         <label class="form-label" for="price">Campground Price</label>
 
@@ -37,6 +33,33 @@
         <label class="form-label" for="description">Description</label>
         <textarea class="form-control" type="text" id="description" name="campground[description]" required><%= campground.description %></textarea>
         <div class="valid-feedback">Looks good!</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Add Image(s)</label>
+        <div class="form-file custom-file">
+          <input class="form-control custom-file-input" type="file" id="image" name="image" multiple onchange="previewMultiple(event)" />
+          <label for="image" class="form-label custom-file-label"></label>
+        </div>
+        <div id="formFile"></div>
+      </div>
+
+      <div class="mb-3">
+        <h6>Delete Images:</h6>
+        <div class="row row-cols-1 row-cols-md-4 g-4 mb-3">
+          <% campground.images.forEach((image, i) => { %>
+          <div class="col">
+            <div class="card">
+              <label for="image-<%= i %>"
+                ><img class="card-img" src="<%= image.thumbnail %>" alt="" />
+                <div class="card-img-overlay text-end pt-1 pe-2">
+                  <input class="form-check-input" type="checkbox" name="deleteImages[]" value="<%= image.filename %>" id="image-<%= i %>" />
+                </div>
+              </label>
+            </div>
+          </div>
+          <% }) %>
+        </div>
       </div>
 
       <div class="mb-3">
