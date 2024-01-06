@@ -23,7 +23,7 @@ const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
 const MongoStore = require("connect-mongo");
 
-const dbUrl = process.env.DB_URL;
+const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/yelp-camp";
 
 // "mongodb://127.0.0.1:27017/yelp-camp"
 mongoose.connect(dbUrl, {
@@ -49,18 +49,20 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public"))); // configures Express.js to serve static files from the "public" directory
 app.use(mongoSanitize());
 
+const secret = process.env.SECRET || "thisshouldbeabettersecret!";
+
 const store = MongoStore.create({
   mongoUrl: dbUrl,
   touchAfter: 24 * 60 * 60, // every 24 hours
   crypto: {
-    secret: "thisshouldbeabettersecret!",
+    secret,
   },
 });
 
 const sessionConfig = {
   store,
   name: "session",
-  secret: "thisshouldbeabettersecret!",
+  secret,
   resave: false,
   saveUninitialized: true,
   cookie: {

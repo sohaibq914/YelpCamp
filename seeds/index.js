@@ -3,7 +3,7 @@ const cities = require("./cities");
 const { places, descriptors } = require("./seedHelpers");
 const Campground = require("../models/campground"); // the campground exports model
 
-mongoose.connect(process.env.DB_URL, {
+mongoose.connect("mongodb://localhost:27017/yelp-camp", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   // useCreateIndex: true // no longer supported
