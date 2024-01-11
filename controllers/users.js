@@ -27,14 +27,17 @@ module.exports.renderLogin = (req, res) => {
 module.exports.login = // Now we can use res.locals.returnTo to redirect the user after login
   (req, res) => {
     req.flash("success", "Welcome Back!");
+    // res.locals.returnTo url was stored in storeReturnTo middleware
     const redirectUrl = res.locals.returnTo || "/campgrounds";
     res.redirect(redirectUrl);
   };
 
+// this route is only available when user is logged in
+// we did this by only showing logout button when there we're logged in (there's a currentUser) in our templates
 module.exports.logout = (req, res, next) => {
   req.logout(function (err) {
     if (err) {
-      return next(err);
+      return next(err); // goes to error-handling middleware
     }
     req.flash("success", "Goodbye!");
     res.redirect("/campgrounds");

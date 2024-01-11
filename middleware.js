@@ -5,6 +5,8 @@ const Review = require("./models/review");
 
 module.exports.isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
+    // req.originalURL is from passport
+    // it gets filled with URL you were going to when you were not logged in
     req.session.returnTo = req.originalUrl; // stores the url, user was trying to go to
     req.flash("error", "You must be signed in first!");
     return res.redirect("/login");
@@ -33,6 +35,7 @@ module.exports.validateCampground = (req, res, next) => {
 module.exports.isAuthor = async (req, res, next) => {
   const { id } = req.params;
   const campground = await Campground.findById(id);
+  console.log(campground.author);
   if (!campground.author.equals(req.user._id)) {
     req.flash("error", "You do not have permission to do that!");
     return res.redirect(`/campgrounds/${id}`);
@@ -57,7 +60,6 @@ module.exports.validateReview = (req, res, next) => {
   }
   // req.body has rating and body
   const { error } = reviewSchema.validate(req.body); // checks the rating and body with joi review schema requirements
-  console.log(error);
   if (error) {
     // getting the message of every error in object
     const msg = error.details.map((el) => el.message).join(",");

@@ -2,13 +2,15 @@ const mongoose = require("mongoose");
 const Review = require("./review");
 const Schema = mongoose.Schema;
 
+// we wanted a virtual property so we had define an ImageSchema separate from the CampgroundSchema
 const ImageSchema = new Schema({
   url: String,
   filename: String,
 });
 
+// each image in the model gets a virtual thumbnail property
 ImageSchema.virtual("thumbnail").get(function () {
-  return this.url.replace("/upload", "/upload/w_200");
+  return this.url.replace("/upload", "/upload/w_200"); // sizing our images
 });
 
 // so we can access virtuals when we convert document to JSON

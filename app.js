@@ -40,7 +40,9 @@ db.once("open", function () {
 
 const app = express();
 
+// ejsmate assists with template and has layouts, partials, etc.
 app.engine("ejs", ejsMate);
+// embedded js
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views")); // absolute path, tell express where to find views
 
@@ -102,9 +104,11 @@ passport.use(new LocalStrategy(User.authenticate())); // authenticate with local
 passport.serializeUser(User.serializeUser()); // how to store user in session
 passport.deserializeUser(User.deserializeUser()); // how to unstore user in session
 
-// runs on every request
+// runs on EVERY request
 app.use((req, res, next) => {
-  res.locals.currentUser = req.user; // access to currentUser in ALL templates
+  // if we logout and this middleware runs on every request, then req.user will be null
+  // this will allow us to alter menu using currentUser state
+  res.locals.currentUser = req.user; // access to currentUser in ALL templates (from passport)
   res.locals.success = req.flash("success"); // access to success message in ALL templates
   res.locals.error = req.flash("error"); // access to error message in ALL templates
   next();

@@ -26,11 +26,11 @@ module.exports.createCampground = async (req, res, next) => {
 
   const campground = new Campground(req.body.campground);
   campground.geometry = geoData.body.features[0].geometry;
-  // for each file object, it extracts the url and filename and stores that into array of objects
+  // for each file object (f), it extracts the url and filename and stores that into array of objects
   campground.images = req.files.map((f) => ({ url: f.path, filename: f.filename }));
+  console.log(campground.images);
   campground.author = req.user._id; // used req.user from passport
   await campground.save();
-  console.log(campground);
   req.flash("success", "Successfully made a new campground!");
   res.redirect(`/campgrounds/${campground._id}`);
 };
@@ -48,6 +48,7 @@ module.exports.showCampground = async (req, res) => {
     req.flash("error", "Cannot find that campground!");
     return res.redirect("/campgrounds"); // by returning it exits the entire func
   }
+  // we can access campground properties bc they're populated
   res.render("campgrounds/show", { campground });
 };
 
@@ -63,7 +64,8 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.updateCampground = async (req, res) => {
   const { id } = req.params;
-  console.log(req.body);
+  console.log(req.body.campground);
+  console.log({ ...req.body.campground });
   const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
   const imgs = req.files.map((f) => ({ url: f.path, filename: f.filename }));
   // spreading to not make array inside array instead just adding object to original array
